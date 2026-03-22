@@ -9,25 +9,19 @@ resource "aws_key_pair" "this" {
   }
 }
 
-data "http" "my_ip" {
-  url = "https://checkip.amazonaws.com"
-}
-
-locals {
-  my_ip_cidr = "${chomp(data.http.my_ip.response_body)}/32"
-}
-
 module "ec2" {
   source = "../../modules/ec2"
 
   name             = "sandbox-ec2-basic"
-  ami_id           = var.ami_id
+  ami_id           = data.aws_ami.rhel.id
   instance_type    = var.instance_type
   subnet_id        = var.subnet_id
   vpc_id           = var.vpc_id
   assign_public_ip = var.assign_public_ip
 
   key_name         = aws_key_pair.this.key_name
+
+  os_type          = "rhel"
 
   ingress_rules = [
     {
