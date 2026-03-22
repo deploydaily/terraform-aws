@@ -1,0 +1,58 @@
+# -----------------------------
+# Terraform core
+# -----------------------------
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Ignore Terraform CLI config
+.terraformrc
+terraform.rc
+
+# -----------------------------
+# Sensitive / local config
+# -----------------------------
+*.tfvars
+*.tfvars.json
+
+# Exception: allow example files
+!*.tfvars.example
+
+# Backend config (contains bucket names, etc.)
+backend.hcl
+
+# -----------------------------
+# Plan files
+# -----------------------------
+*.tfplan
+
+# -----------------------------
+# Override files
+# -----------------------------
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# -----------------------------
+# CLI / lock file
+# -----------------------------
+.terraform.lock.hcl
+
+# -----------------------------
+# OS / editor junk
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# IDE files
+# -----------------------------
+.vscode/
+.idea/
+
+# -----------------------------
+# Logs
+# -----------------------------
+*.log
