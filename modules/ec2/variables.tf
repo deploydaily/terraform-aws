@@ -52,3 +52,15 @@ variable "ingress_rules" {
   }))
   default = []
 }
+
+variable "user_data" {
+  description = "Custom user data script (overrides os_type)"
+  type        = string
+  default     = null
+}
+
+variable "os_type" {
+  description = "OS type for default user_data (amazon_linux, rhel, ubuntu)"
+  type        = string
+  default     = null
+}

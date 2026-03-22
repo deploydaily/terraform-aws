@@ -12,6 +12,16 @@ locals {
   ])
 }
 
+locals {
+  user_data_rendered = (
+    var.user_data != null ? var.user_data :
+    var.os_type == "amazon_linux" ? file("${path.module}/scripts/ansible_amazon_linux.sh") :
+    var.os_type == "rhel" ? file("${path.module}/scripts/ansible_rhel.sh") :
+    var.os_type == "ubuntu" ? file("${path.module}/scripts/ansible_ubuntu.sh") :
+    null
+  )
+}
+
 resource "aws_security_group" "this" {
   name_prefix = "${var.name}-sg-"
   description = "Security group for ${var.name}"
@@ -51,9 +61,9 @@ resource "aws_instance" "this" {
   subnet_id                   = var.subnet_id
   associate_public_ip_address = var.assign_public_ip
   key_name                    = var.key_name
-
-  vpc_security_group_ids = [aws_security_group.this.id]
-
+  vpc_security_group_ids      = [aws_security_group.this.id]
+  user_data                   = local.user_data_rendered
+  user_data_replace_on_change = true
   tags = merge(
     var.tags,
     {
