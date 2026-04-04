@@ -1,0 +1,29 @@
+I'm building an enterprise AWX showcase GitHub project for a senior 
+systems engineering interview. The role focuses on Ansible Automation 
+Platform, TrueSight Server Orchestrator, enterprise Linux/Windows 
+automation, and SDLC for automation content.
+
+Architecture decided:
+- AWX on RHEL 9 directly (no K3s, no Kubernetes) via systemd services
+- ACG sandbox: t3.medium controller, 3x t3.micro managed nodes (2 Linux, 1 Windows)
+- RDS PostgreSQL 15 (db.t3.medium), Redis local on controller
+- ECR for EE images, Secrets Manager for credentials
+- IAM instance profile (ec2:Describe*, ecr:*, secretsmanager:Get*)
+- Access via EC2 public IP + self-signed cert (no ALB, no Route 53)
+- Dynamic inventory via aws_ec2 plugin, grouped by EC2 tags
+
+Repo name: enterprise-awx-platform
+Collection namespace: kumar.enterprise
+Terraform repo: terraform-aws
+
+Project structure:
+- infra/                    Terraform
+- collections/kumar/enterprise/  Custom collection (4 roles)
+- playbooks/                AWX job template sources
+- awx_config/               AWX as code (awx.awx collection)
+- inventories/              static + dynamic
+- execution_environments/   ansible-builder EE definitions
+- .github/workflows/        CI/CD pipeline
+- docs/                     Architecture + ADRs
+
+Generate the complete code for [SPECIFIC COMPONENT] next.
