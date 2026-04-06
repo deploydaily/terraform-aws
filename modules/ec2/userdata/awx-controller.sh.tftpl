@@ -1,0 +1,47 @@
+#!/bin/bash
+set -euxo pipefail
+exec > >(tee /var/log/awx-bootstrap.log) 2>&1
+
+echo "=== AWX Controller Bootstrap started $(date) ==="
+
+# ------------------------------------------------------
+# 1. Minimal system prep
+# ------------------------------------------------------
+dnf update -y
+dnf install -y ansible-core git python3 python3-pip
+
+# AWS CLI v2
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
+unzip -q /tmp/awscliv2.zip -d /tmp
+/tmp/aws/install
+rm -rf /tmp/aws /tmp/awscliv2.zip
+
+# Install required collections
+ansible-galaxy collection install \
+  amazon.aws \
+  ansible.posix \
+  community.general
+
+# ------------------------------------------------------
+# 2. Pull platform repo
+# ------------------------------------------------------
+git clone https://github.com/deploydaily/Ansible.git /opt/ansible-platform
+cd /opt/ansible-platform
+
+# Install collection requirements
+ansible-galaxy collection install -r requirements.yml
+
+# ------------------------------------------------------
+# 3. Run AWX install playbook
+# ------------------------------------------------------
+ansible-playbook playbooks/install_awx.yml \
+  -i inventories/aws_ec2.yml \
+  -e "awx_db_host=${db_host}" \
+  -e "awx_db_secret_name=${db_secret_name}" \
+  -e "awx_admin_secret_name=${adm_secret_name}" \
+  -e "aws_region=${aws_region}" \
+  --connection=local \
+  -i "localhost," \
+  --limit localhost
+
+echo "=== Bootstrap handoff to Ansible complete $(date) ==="

@@ -29,6 +29,15 @@ module "ec2" {
   ec2_instance_profile_name = module.iam.instance_profile_name
   instance_type             = var.instance_type
   public_key_path           = var.public_key_path
+
+  # AWX bootstrap
+  aws_region      = var.aws_region
+  db_host         = module.rds.rds_endpoint
+  db_name         = "awx"
+  db_user         = "awx"
+  db_secret_name  = module.secrets.db_secret_name
+  adm_secret_name = module.secrets.admin_secret_name
+  controller_ip   = ""
 }
 
 # ------------------------------------------------------

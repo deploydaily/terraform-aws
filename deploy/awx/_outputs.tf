@@ -17,3 +17,8 @@ output "ssh_command" {
   description = "SSH into the AWX controller"
   value       = "ssh -i ~/.ssh/id_ed25519 ec2-user@${module.ec2.public_ip}"
 }
+
+output "rds_endpoint" {
+  description = "RDS PostgreSQL endpoint — passed into AWX bootstrap"
+  value       = module.rds.rds_endpoint
+}

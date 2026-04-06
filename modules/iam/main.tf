@@ -27,6 +27,29 @@ data "aws_iam_policy_document" "awx_controller_policy_doc" {
     ]
     resources = ["*"]
   }
+
+  # Secrets Manager — read awx/* only
+  statement {
+    sid = "SecretsManagerRead"
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+    ]
+    resources = [
+      "arn:aws:secretsmanager:us-east-1:557797816042:secret:awx/*"
+    ]
+  }
+
+  # ECR — pull execution environment images
+  statement {
+    sid = "ECRPullEE"
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role_policy" "awx_controller_policy" {

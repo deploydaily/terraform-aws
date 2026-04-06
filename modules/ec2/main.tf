@@ -24,6 +24,18 @@ resource "aws_instance" "awx_controller" {
   iam_instance_profile   = var.ec2_instance_profile_name
   key_name               = aws_key_pair.ec2_key_pair.key_name
 
+  user_data = templatefile("${path.module}/userdata/awx-controller.sh.tftpl", {
+    aws_region      = var.aws_region
+    db_host         = var.db_host
+    db_name         = var.db_name
+    db_user         = var.db_user
+    db_secret_name  = var.db_secret_name
+    adm_secret_name = var.adm_secret_name
+    controller_ip   = var.controller_ip
+  })
+
+  user_data_replace_on_change = true
+
   root_block_device {
     volume_size = 30
     volume_type = "gp3"
