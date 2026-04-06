@@ -32,6 +32,49 @@ module "ec2" {
 }
 
 # ------------------------------------------------------
+# Managed Nodes
+# ------------------------------------------------------
+module "linux_node_01" {
+  source = "../../modules/managed-node"
+
+  node_name        = "linux-node-01"
+  os_type          = "linux"
+  env              = "dev"
+  instance_type    = "t3.micro"
+  subnet_id        = module.vpc.public_subnet_ids[0]
+  vpc_id           = module.vpc.vpc_id
+  controller_sg_id = module.ec2.security_group_id
+  key_name         = module.ec2.key_name
+}
+
+module "linux_node_02" {
+  source = "../../modules/managed-node"
+
+  node_name        = "linux-node-02"
+  os_type          = "linux"
+  env              = "prod"
+  instance_type    = "t3.micro"
+  subnet_id        = module.vpc.public_subnet_ids[1]
+  vpc_id           = module.vpc.vpc_id
+  controller_sg_id = module.ec2.security_group_id
+  key_name         = module.ec2.key_name
+}
+
+module "windows_node_01" {
+  source = "../../modules/managed-node"
+
+  node_name               = "windows-node-01"
+  os_type                 = "windows"
+  env                     = "dev"
+  instance_type           = "t3.micro"
+  subnet_id               = module.vpc.public_subnet_ids[0]
+  vpc_id                  = module.vpc.vpc_id
+  controller_sg_id        = module.ec2.security_group_id
+  key_name                = module.ec2.key_name
+  windows_public_key_path = "~/.ssh/awx_windows_rsa.pub"
+}
+
+# ------------------------------------------------------
 # Secrets Manager
 # ------------------------------------------------------
 module "secrets" {

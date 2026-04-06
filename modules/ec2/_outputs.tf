@@ -17,3 +17,8 @@ output "security_group_id" {
   description = "Security group ID attached to the instance"
   value       = aws_security_group.awx_controller_sg.id
 }
+
+output "key_name" {
+  description = "EC2 key pair name"
+  value       = aws_key_pair.ec2_key_pair.key_name
+}
