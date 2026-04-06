@@ -31,7 +31,6 @@ resource "aws_instance" "awx_controller" {
     db_user         = var.db_user
     db_secret_name  = var.db_secret_name
     adm_secret_name = var.adm_secret_name
-    controller_ip   = var.controller_ip
   })
 
   user_data_replace_on_change = true
@@ -47,4 +46,8 @@ resource "aws_instance" "awx_controller" {
     role       = "controller"
     managed_by = "terraform"
   }
+
+  depends_on = [
+    aws_key_pair.ec2_key_pair
+  ]
 }

@@ -37,7 +37,6 @@ module "ec2" {
   db_user         = "awx"
   db_secret_name  = module.secrets.db_secret_name
   adm_secret_name = module.secrets.admin_secret_name
-  controller_ip   = ""
 }
 
 # ------------------------------------------------------

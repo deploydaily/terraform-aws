@@ -35,13 +35,13 @@ ansible-galaxy collection install -r requirements.yml
 # 3. Run AWX install playbook
 # ------------------------------------------------------
 ansible-playbook playbooks/install_awx.yml \
-  -i inventories/aws_ec2.yml \
+  -i "localhost," \
   -e "awx_db_host=${db_host}" \
   -e "awx_db_secret_name=${db_secret_name}" \
   -e "awx_admin_secret_name=${adm_secret_name}" \
   -e "aws_region=${aws_region}" \
   --connection=local \
-  -i "localhost," \
   --limit localhost
 
 echo "=== Bootstrap handoff to Ansible complete $(date) ==="
+echo "=== UI: https://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) ==="

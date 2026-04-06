@@ -55,9 +55,3 @@ variable "adm_secret_name" {
   description = "Secrets Manager secret name for AWX admin password"
   type        = string
 }
-
-variable "controller_ip" {
-  description = "AWX controller public IP — written to bootstrap log"
-  type        = string
-  default     = ""
-}
