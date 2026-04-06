@@ -30,3 +30,25 @@ module "ec2" {
   instance_type             = var.instance_type
   public_key_path           = var.public_key_path
 }
+
+# ------------------------------------------------------
+# Secrets Manager
+# ------------------------------------------------------
+module "secrets" {
+  source       = "../../modules/secrets"
+  project_name = var.project_name
+}
+
+# ------------------------------------------------------
+# RDS — PostgreSQL 15
+# ------------------------------------------------------
+module "rds" {
+  source = "../../modules/rds"
+
+  project_name       = var.project_name
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+  controller_sg_id   = module.ec2.security_group_id
+  db_password        = module.secrets.db_password
+  db_instance_class  = var.db_instance_class
+}
