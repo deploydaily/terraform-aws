@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 resource "aws_security_group" "rds_sg" {
   name_prefix = "awx-rds-"
-  description = "RDS PostgreSQL — inbound from AWX controller only"
+  description = "RDS PostgreSQL inbound from AWX controller only"
   vpc_id      = var.vpc_id
 
   tags = { Name = "sg-awx-rds" }
