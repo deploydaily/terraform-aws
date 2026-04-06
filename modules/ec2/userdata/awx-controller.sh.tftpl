@@ -8,7 +8,8 @@ echo "=== AWX Controller Bootstrap started $(date) ==="
 # 1. Minimal system prep
 # ------------------------------------------------------
 dnf update -y
-dnf install -y ansible-core git python3 python3-pip
+dnf install -y git python3 python3-pip unzip curl
+pip3 install "ansible-core>=2.15"
 
 # AWS CLI v2
 curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
@@ -29,7 +30,11 @@ git clone https://github.com/deploydaily/Ansible.git /opt/ansible-platform
 cd /opt/ansible-platform
 
 # Install collection requirements
-ansible-galaxy collection install -r requirements.yml
+ansible-galaxy collection install -r requirements.yml -p ./collections
+
+# Build and install the platform.automation collection from source
+ansible-galaxy collection build collections/platform/automation/ --output-path /tmp/
+ansible-galaxy collection install /tmp/platform-automation-*.tar.gz -p ./collections
 
 # ------------------------------------------------------
 # 3. Run AWX install playbook
